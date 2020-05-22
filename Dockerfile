@@ -6,8 +6,6 @@ COPY package.json \
   yarn.lock \
   ./
 RUN yarn --production
-# cache the production necessary node_modules/
-RUN mv node_modules/ /tmp/node_modules/
 
 FROM BASE AS DEV
 COPY .eslintrc.js \
@@ -28,17 +26,14 @@ RUN yarn test:e2e
 
 FROM DEV as BUILD
 RUN yarn build
-# cache the dist directory 
-# not necessary, but follows the idea from other steps
-RUN mv dist/ /tmp/dist/
 
-# use smallest image possible
+# use one of the smallest images possible
 FROM node:12-alpine
 # get package.json from base
 COPY --from=BASE /app/package.json ./
 # get the dist back
-COPY --from=BUILD /tmp/dist/ ./dist/
+COPY --from=BUILD /app/dist/ ./dist/
 # get the node_modules from the intial cache
-COPY --from=BASE /tmp/node_modules/ ./node_modules/
+COPY --from=BASE /app/node_modules/ ./node_modules/
 # start
-CMD ["yarn", "start:prod"]
+CMD ["node", "dist/main.js"]
