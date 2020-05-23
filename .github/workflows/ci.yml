@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Docker Compose Test
+      run: docker-compose up -d
+    - name: Stop Docker Compose
+      run: docker-compose down
+    - name: Build Docker Container
+      run: docker build . -t docker-nest

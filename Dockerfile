@@ -17,22 +17,15 @@ COPY .eslintrc.js \
 COPY ./src/ ./src/
 RUN yarn
 RUN yarn lint
-
-FROM DEV as TEST
-# bring in test from context
-COPY ./test/ ./test/
-RUN yarn test
-RUN yarn test:e2e
-
-FROM DEV as BUILD
 RUN yarn build
+
 
 # use one of the smallest images possible
 FROM node:12-alpine
 # get package.json from base
 COPY --from=BASE /app/package.json ./
 # get the dist back
-COPY --from=BUILD /app/dist/ ./dist/
+COPY --from=DEV /app/dist/ ./dist/
 # get the node_modules from the intial cache
 COPY --from=BASE /app/node_modules/ ./node_modules/
 # start
