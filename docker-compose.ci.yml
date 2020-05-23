@@ -3,4 +3,4 @@ services:
   nest:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./test.Dockerfile

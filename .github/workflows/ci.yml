@@ -18,8 +18,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Docker Compose Test
-      run: docker-compose up -d
+      run: docker-compose -f docker-compose.ci.yml up -d
     - name: Stop Docker Compose
-      run: docker-compose down
+      run: docker-compose -f docker-compose.ci.yml down
     - name: Build Docker Container
       run: docker build . -t docker-nest

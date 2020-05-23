@@ -31,3 +31,27 @@ docker-compose up -d
 ```
 
 Which will run the build, and start the server mapping local port 80 ot the container's port 3000.
+
+## Tests
+
+### Docker
+
+You can build the test docker if you'd like with the following command
+
+```sh
+docker build -f test.Dockerfile .
+``` 
+
+### Docker-Compose
+
+A better idea would be to use the `docker-compose` built for tests specifically.
+
+```sh
+docker-compose -f docker-compose.ci.yml up -d
+```
+
+Afterwards you can stop the container with
+
+```sh
+docker-compose -f docker-compose.ci.yml down
+```
