@@ -1,6 +1,5 @@
 FROM node:12 as BASE
-# I use yarn, you can swap with npm and cut a step or two out
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+
 WORKDIR /app
 COPY package.json \
   yarn.lock \
