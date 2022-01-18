@@ -1,4 +1,4 @@
-FROM node:12 as BASE
+FROM node:16 as base
 
 WORKDIR /app
 COPY package.json \
@@ -11,7 +11,7 @@ RUN node-prune
 # lint and formatting configs are commented out
 # uncomment if you want to add them into the build process
 
-FROM BASE AS DEV
+FROM base AS dev
 COPY nest-cli.json \
   tsconfig.* \
 #  .eslintrc.js \
@@ -24,13 +24,13 @@ RUN yarn
 RUN yarn build
 
 # use one of the smallest images possible
-FROM node:12-alpine
+FROM node:16-alpine
 # get package.json from base
-COPY --from=BASE /app/package.json ./
+COPY --from=base /app/package.json ./
 # get the dist back
-COPY --from=DEV /app/dist/ ./dist/
+COPY --from=dev /app/dist/ ./dist/
 # get the node_modules from the intial cache
-COPY --from=BASE /app/node_modules/ ./node_modules/
+COPY --from=base /app/node_modules/ ./node_modules/
 # expose application port 
 EXPOSE 3000
 # start
